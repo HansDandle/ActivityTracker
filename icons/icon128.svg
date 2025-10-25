@@ -1,0 +1,40 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="grad128" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+        </linearGradient>
+        <filter id="shadow128" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+        </filter>
+    </defs>
+    
+    <!-- Background circle -->
+    <circle cx="64" cy="64" r="56" fill="url(#grad128)" filter="url(#shadow128)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    
+    <!-- Clock face -->
+    <circle cx="64" cy="64" r="45" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+    
+    <!-- Hour markers -->
+    <g stroke="rgba(255,255,255,0.8)" stroke-width="3" stroke-linecap="round">
+        <line x1="64" y1="24" x2="64" y2="32" />
+        <line x1="100" y1="64" x2="92" y2="64" />
+        <line x1="64" y1="104" x2="64" y2="96" />
+        <line x1="28" y1="64" x2="36" y2="64" />
+    </g>
+    
+    <!-- Clock hands pointing to 10:10 (classic watch pose) -->
+    <g stroke="white" stroke-linecap="round">
+        <!-- Hour hand -->
+        <line x1="64" y1="64" x2="64" y2="45" stroke-width="4" />
+        <!-- Minute hand -->
+        <line x1="64" y1="64" x2="80" y2="48" stroke-width="3" />
+    </g>
+    
+    <!-- Center dot -->
+    <circle cx="64" cy="64" r="3" fill="white"/>
+    
+    <!-- Tasks indicator (small rectangles representing task list) -->
+    <rect x="75" y="75" width="12" height="8" fill="rgba(255,255,255,0.9)" rx="2"/>
+    <rect x="75" y="85" width="8" height="8" fill="rgba(255,255,255,0.7)" rx="2"/>
+</svg>

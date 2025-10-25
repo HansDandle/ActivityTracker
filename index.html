@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Task Tracker</h1>
+            <div class="date-display">
+                <span id="currentDate"></span>
+            </div>
+        </header>
+
+        <section class="task-form-section">
+            <h2>Add New Task</h2>
+            <form id="taskForm" class="task-form">
+                <div class="form-group">
+                    <label for="taskName">Task Name:</label>
+                    <input type="text" id="taskName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskCategory">Category:</label>
+                    <select id="taskCategory">
+                        <!-- Categories will be dynamically populated -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskComments">Comments:</label>
+                    <textarea id="taskComments" rows="3" placeholder="Optional notes about this task..."></textarea>
+                </div>
+                
+                <button type="submit">Add Task</button>
+            </form>
+        </section>
+
+        <section class="controls-section">
+            <div class="export-controls">
+                <button id="exportCsv" class="export-btn">Export Today's Tasks to CSV</button>
+                <button id="clearCompleted" class="clear-btn">Clear Completed Tasks</button>
+            </div>
+        </section>
+
+        <section class="tasks-section">
+            <h2>Today's Tasks</h2>
+            <div id="tasksList" class="tasks-list">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+        </section>
+
+        <section class="summary-section">
+            <h3>Daily Summary</h3>
+            <div id="dailySummary" class="daily-summary">
+                <div class="summary-item">
+                    <span class="label">Total Tasks:</span>
+                    <span id="totalTasks">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Completed:</span>
+                    <span id="completedTasks">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Total Time:</span>
+                    <span id="totalTime">00:00:00</span>
+                </div>
+            </div>
+        </section>
+<br>
+        <section class="category-management-section">
+            <h2>Category Management</h2>
+            <div class="category-controls">
+                <div class="add-category-form">
+                    <input type="text" id="newCategoryInput" placeholder="Enter new category name...">
+                    <button id="addCategoryBtn" class="btn-add-category">Add Category</button>
+                </div>
+                <div class="categories-list" id="categoriesList">
+                    <!-- Categories will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="editTaskModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Task</h3>
+                <button class="modal-close" onclick="taskTracker.closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editTaskForm">
+                    <div class="modal-form-group">
+                        <label for="editTaskName">Task Name:</label>
+                        <input type="text" id="editTaskName" required>
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="editTaskCategory">Category:</label>
+                        <select id="editTaskCategory">
+                            <!-- Categories will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="editTaskComments">Comments:</label>
+                        <textarea id="editTaskComments" rows="4" placeholder="Optional notes about this task..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" onclick="taskTracker.closeEditModal()">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="taskTracker.saveTaskEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
