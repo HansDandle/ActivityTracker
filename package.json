@@ -1,0 +1,28 @@
+{
+  "name": "task-tracker-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension for task tracking with time management",
+  "scripts": {
+    "build": "npm run clean && npm run package",
+    "clean": "rm -f task-tracker-extension.zip",
+    "package": "zip -r task-tracker-extension.zip . -x '*.git*' 'node_modules/*' '*.md' 'package*.json' '.github/*' '.gitignore' '.venv/*'",
+    "dev": "echo 'Load extension in Chrome from this directory'",
+    "version-bump": "npm version patch --no-git-tag-version && npm run update-manifest",
+    "update-manifest": "node -e \"const pkg=require('./package.json'); const manifest=require('./manifest.json'); manifest.version=pkg.version; require('fs').writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2));\"",
+    "prepare-release": "npm run version-bump && git add package.json manifest.json && git commit -m 'Bump version to v'$(node -p \"require('./package.json').version\")",
+    "deploy": "git push origin main"
+  },
+  "keywords": [
+    "chrome-extension",
+    "task-tracker",
+    "time-management",
+    "productivity"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HansDandle/ActivityTracker.git"
+  }
+}

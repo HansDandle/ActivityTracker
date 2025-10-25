@@ -1,0 +1,91 @@
+name: Deploy Chrome Extension
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'manifest.json'
+      - 'popup.html'
+      - 'popup-script.js'
+      - 'popup-styles.css'
+      - 'icons/**'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build extension package
+      run: npm run build
+    
+    - name: Get version from manifest
+      id: version
+      run: |
+        VERSION=$(node -p "require('./manifest.json').version")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Extension version: $VERSION"
+    
+    - name: Check if version already exists
+      id: version_check
+      run: |
+        # This will help prevent duplicate uploads
+        echo "Deploying version ${{ steps.version.outputs.version }}"
+        
+    - name: Upload to Chrome Web Store
+      uses: mnao305/chrome-extension-upload@v4.0.1
+      with:
+        file-path: task-tracker-extension.zip
+        extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+        client-id: ${{ secrets.CHROME_CLIENT_ID }}
+        client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+        refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+        publish: true # Set to false if you want to upload as draft
+        
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.version.outputs.version }}
+        release_name: Task Tracker Extension v${{ steps.version.outputs.version }}
+        body: |
+          🚀 **Task Tracker Extension v${{ steps.version.outputs.version }}**
+          
+          Automatically deployed to Chrome Web Store.
+          
+          **Changes in this version:**
+          - Check the commit messages for detailed changes
+          
+          **Installation:**
+          - Install from [Chrome Web Store](https://chrome.google.com/webstore/detail/${{ secrets.CHROME_EXTENSION_ID }})
+          - Or download the extension package from this release
+        draft: false
+        prerelease: false
+        
+    - name: Upload extension package to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./task-tracker-extension.zip
+        asset_name: task-tracker-extension-v${{ steps.version.outputs.version }}.zip
+        asset_content_type: application/zip
+        
+    - name: Deployment Success
+      run: |
+        echo "🎉 Successfully deployed Task Tracker Extension v${{ steps.version.outputs.version }} to Chrome Web Store!"
+        echo "📦 Release created with extension package"
+        echo "🔗 Users will receive the update automatically"

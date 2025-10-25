@@ -79,6 +79,36 @@ class TaskTracker {
             e.preventDefault();
             this.saveTaskEdit();
         });
+
+        // Event delegation for dynamic buttons
+        document.addEventListener('click', (e) => {
+            // Task control buttons
+            if (e.target.classList.contains('btn-start')) {
+                const taskId = e.target.closest('.task-item').dataset.taskId;
+                this.startTask(taskId);
+            } else if (e.target.classList.contains('btn-pause')) {
+                const taskId = e.target.closest('.task-item').dataset.taskId;
+                this.pauseTask(taskId);
+            } else if (e.target.classList.contains('btn-done')) {
+                const taskId = e.target.closest('.task-item').dataset.taskId;
+                this.completeTask(taskId);
+            } else if (e.target.classList.contains('btn-edit')) {
+                const taskId = e.target.closest('.task-item').dataset.taskId;
+                this.openEditModal(taskId);
+            } else if (e.target.classList.contains('btn-delete')) {
+                const taskId = e.target.closest('.task-item').dataset.taskId;
+                this.deleteTask(taskId);
+            }
+            
+            // Category control buttons
+            else if (e.target.classList.contains('btn-edit-category')) {
+                const categoryName = e.target.closest('.category-item').querySelector('.category-name').textContent;
+                this.editCategory(categoryName);
+            } else if (e.target.classList.contains('btn-delete-category')) {
+                const categoryName = e.target.closest('.category-item').querySelector('.category-name').textContent;
+                this.deleteCategory(categoryName);
+            }
+        });
     }
 
     updateCurrentDate() {
@@ -235,8 +265,8 @@ class TaskTracker {
             <div class="category-item ${category.isDefault ? 'default' : ''}">
                 <span class="category-name">${this.escapeHtml(category.name)}</span>
                 <div class="category-buttons">
-                    <button class="btn-edit-category" onclick="taskTracker.editCategory('${category.name}')" title="Edit category">✏️</button>
-                    ${!category.isDefault ? `<button class="btn-delete-category" onclick="taskTracker.deleteCategory('${category.name}')" title="Delete category">&times;</button>` : ''}
+                    <button class="btn-edit-category" title="Edit category">✏️</button>
+                    ${!category.isDefault ? `<button class="btn-delete-category" title="Delete category">&times;</button>` : ''}
                 </div>
             </div>
         `).join('');
@@ -431,7 +461,7 @@ class TaskTracker {
                     
                     <div class="task-controls">
                         ${this.renderTaskButtons(task)}
-                        <button class="btn btn-delete" onclick="taskTracker.deleteTask('${task.id}')">Del</button>
+                        <button class="btn btn-delete">Del</button>
                     </div>
                 </div>
             `;
@@ -486,26 +516,26 @@ class TaskTracker {
     }
 
     renderTaskButtons(task) {
-        let editButton = `<button class="btn btn-edit" onclick="taskTracker.openEditModal('${task.id}')" title="Edit task">Edit</button>`;
+        let editButton = `<button class="btn btn-edit" title="Edit task">Edit</button>`;
 
         switch (task.status) {
             case 'not-started':
                 return `
-                    <button class="btn btn-start" onclick="taskTracker.startTask('${task.id}')">Start</button>
+                    <button class="btn btn-start">Start</button>
                     ${editButton}
                 `;
             
             case 'running':
                 return `
-                    <button class="btn btn-pause" onclick="taskTracker.pauseTask('${task.id}')">Pause</button>
-                    <button class="btn btn-done" onclick="taskTracker.completeTask('${task.id}')">Done</button>
+                    <button class="btn btn-pause">Pause</button>
+                    <button class="btn btn-done">Done</button>
                     ${editButton}
                 `;
             
             case 'paused':
                 return `
-                    <button class="btn btn-start" onclick="taskTracker.startTask('${task.id}')">Resume</button>
-                    <button class="btn btn-done" onclick="taskTracker.completeTask('${task.id}')">Done</button>
+                    <button class="btn btn-start">Resume</button>
+                    <button class="btn btn-done">Done</button>
                     ${editButton}
                 `;
             
